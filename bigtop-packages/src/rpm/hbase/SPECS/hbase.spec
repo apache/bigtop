@@ -309,7 +309,7 @@ env HBASE_VERSION=%{version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-bash %{SOURCE2} \
+env HBASE_VERSION=%{hbase_base_version} bash %{SOURCE2} \
 	--build-dir=build \
     --man-dir=%{man_dir} \
     --bin-dir=%{bin_dir} \

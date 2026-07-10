@@ -150,7 +150,10 @@ pushd `pwd`
 cd $PREFIX/$LIB_DIR
 for i in `ls hbase*jar | grep -v tests.jar`
 do
-    ln -s $i `echo $i | sed -n 's/\(.*\)\(-[0-9].*\)\(.jar\)/\1\3/p'`
+  if [[ $i =~ hbase-(.*)-${HBASE_VERSION}.jar ]]; then
+    name=${BASH_REMATCH[1]}
+    ln -s $i hbase-$name.jar
+  fi
 done
 popd
 
