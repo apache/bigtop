@@ -384,6 +384,8 @@ fi
 %exclude %dir %{usr_lib_hive}
 %exclude %dir %{usr_lib_hive}/jdbc
 %exclude %{usr_lib_hive}/jdbc/hive-jdbc-*.jar
+%exclude %{usr_lib_hive}/lib/hbase-*.jar
+%exclude %{usr_lib_hive}/lib/hive-hbase-handler*.jar
 
 %files hbase
 %defattr(-,root,root,755)
