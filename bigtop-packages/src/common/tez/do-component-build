@@ -18,7 +18,7 @@ set -xe
 
 . `dirname $0`/bigtop.bom
 
-BUILD_TEZ_OPTS="clean package \
+BUILD_TEZ_OPTS="clean install \
 -Dtar -Dhadoop.version=${HADOOP_VERSION} \
 -Phadoop28 \
 -DskipTests"
