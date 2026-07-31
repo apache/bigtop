@@ -64,7 +64,7 @@ What do people use Apache Bigtop for?
 
 You can go to the [Apache Bigtop website](http://bigtop.apache.org/) for notes on how to do "common" tasks like:
 
-  * Apache Hadoop App developers: Download an Apache Bigtop built Apache Hadoop 2.0 VM from the website, so you can have a running psuedodistributed Apache Hadoop cluster to test your code on.
+  * Apache Hadoop App developers: Download an Apache Bigtop built Apache Hadoop 2.0 VM from the website, so you can have a running pseudodistributed Apache Hadoop cluster to test your code on.
   * Cluster administers or deployment gurus: Run the Apache Bigtop smoke tests to ensure that your cluster is working.
   * Vendors: Build your own Apache Hadoop distribution, customized from Apache Bigtop bits.
 
