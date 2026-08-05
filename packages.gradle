@@ -386,26 +386,35 @@ def genTasks = { target, packaging ->
     def final DEB_PKG_NAME_SUFFIX =  getPkgNameSuffix(config.bigtop.components[target], "deb").pkgNameSuffix
     def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
     
+    delete "$PKG_OUTPUT_DIR/$PKG_NAME-$PKG_VERSION"
     exec {
       workingDir PKG_OUTPUT_DIR
       commandLine "dpkg-source -x $SRCDEB".split(' ')
     }
 // Order of debuild parameters is important; hence specifying explicitely rather
 // than in an array of args
+    def debArch = 'amd64'
+    try {
+      def proc = 'dpkg --print-architecture'.execute()
+      proc.waitFor()
+      if (proc.exitValue() == 0 && proc.text?.trim()) debArch = proc.text.trim()
+    } catch (Exception ignore) {}
+    def debuildDepsOpt = (target == 'nutch') ? ' -d' : ''
+    def nutchJava11Env = (target == 'nutch') ? "--set-envvar=JAVA_HOME=/usr/lib/jvm/java-11-openjdk-${debArch} " : ''
     def command = """debuild \
 --preserve-envvar PATH \
 --preserve-envvar MAVEN3_HOME \
 --preserve-envvar MAVEN_OPTS \
 --preserve-envvar JAVA_HOME \
 --preserve-envvar BIGTOP_JDK \
---set-envvar=HADOOP_VERSION=$HADOOP_VERSION \
+${nutchJava11Env}--set-envvar=HADOOP_VERSION=$HADOOP_VERSION \
 --set-envvar=${toOldStyleName(target)}_BASE_VERSION=$BASE_VERSION \
 --set-envvar=${toOldStyleName(target)}_VERSION=$PKG_VERSION \
 --set-envvar=${toOldStyleName(target)}_RELEASE=$BIGTOP_BUILD_STAMP \
 --set-envvar=PARENT_DIR=$FULL_PARENT_DIR \
 --set-envvar=PKG_NAME_SUFFIX=$DEB_PKG_NAME_SUFFIX \
 --set-envvar=bigtop_base_version=${BIGTOP_BASE_VERSION} \
--uc -us -b
+-uc -us -b${debuildDepsOpt}
 """
     exec {
       workingDir "$PKG_OUTPUT_DIR/$PKG_NAME-$PKG_VERSION"
@@ -533,13 +542,14 @@ def genTasks = { target, packaging ->
     }
     // Deleting obsolete files
     delete fileTree(dir: "$DEB_BLD_DIR/debian", includes: ['*.ex', '*.EX', '*.~'])
-    // Creating source package
+    // Creating source package (-d for nutch: ant is provided by toolchain at /usr/local/ant, not by apt)
+    def dpkgBuildpackageArgs = (target == 'nutch') ? ['-uc', '-us', '-sa', '-S', '-d'] : ['-uc', '-us', '-sa', '-S']
     exec {
       workingDir DEB_BLD_DIR
       environment 'PARENT_DIR', FULL_PARENT_DIR
       environment 'PKG_NAME_SUFFIX', DEB_PKG_NAME_SUFFIX
       environment 'bigtop_base_version', BIGTOP_BASE_VERSION
-      commandLine "dpkg-buildpackage -uc -us -sa -S".split(' ')
+      commandLine (['dpkg-buildpackage'] + dpkgBuildpackageArgs)
     }
     mkdir(PKG_OUTPUT_DIR)
     copy {
@@ -978,6 +988,7 @@ task "apt" (
     description: "Creating APT repository",
     group: PACKAGES_GROUP) doLast {
 
+  file(BUILD_DIR).mkdirs()
   delete ( "$OUTPUT_DIR/apt")
   mkdir ("$OUTPUT_DIR/apt/conf")
 
@@ -988,7 +999,7 @@ task "apt" (
   }.each  { changeFile ->
     exec {
       workingDir BUILD_DIR
-      commandLine "reprepro -Vb $OUTPUT_DIR/apt include bigtop $changeFile".split(' ')
+      commandLine "/usr/bin/reprepro", "-Vb", "$OUTPUT_DIR/apt", "include", "bigtop", changeFile.absolutePath
     }
   }
 }

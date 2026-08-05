@@ -13,12 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-docker:
-        memory_limit: "4g"
-        image:  "bigtop/puppet:trunk-ubuntu-24.04"
+Source: nutch
+Section: misc
+Priority: extra
+Maintainer: Apache Bigtop <dev@bigtop.apache.org>
+Build-Depends: debhelper (>= 7.0.50~), ant
+Standards-Version: 3.8.0
+Homepage: https://nutch.apache.org
 
-repo: "http://repos.bigtop.apache.org/releases/3.5.0/ubuntu/24.04/$(ARCH)"
-distro: debian
-components: [hdfs, yarn, mapreduce, nutch]
-enable_local_repo: false
-smoke_test_components: [hdfs, yarn, mapreduce, nutch]
+Package: nutch
+Architecture: all
+Depends: bigtop-utils (>= 0.7), hadoop-client
+Description: Apache Nutch - extensible, scalable web crawler
+ Apache Nutch is an open source web crawler. It uses Apache Hadoop data
+ structures and MapReduce for batch processing, and can integrate with
+ Apache Solr or Elasticsearch for indexing and search.

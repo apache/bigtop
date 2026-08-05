@@ -1,0 +1,4 @@
+nutch (1.22-1) stable; urgency=low
+  * Initial Bigtop package
+
+ -- Apache Bigtop <dev@bigtop.apache.org>  Sat, 01 Jan 2024 00:00:00 +0000

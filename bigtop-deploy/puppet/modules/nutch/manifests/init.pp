@@ -13,12 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-docker:
-        memory_limit: "4g"
-        image:  "bigtop/puppet:trunk-ubuntu-24.04"
+class nutch {
 
-repo: "http://repos.bigtop.apache.org/releases/3.5.0/ubuntu/24.04/$(ARCH)"
-distro: debian
-components: [hdfs, yarn, mapreduce, nutch]
-enable_local_repo: false
-smoke_test_components: [hdfs, yarn, mapreduce, nutch]
+  class deploy ($roles) {
+    if ("nutch-client" in $roles) {
+      include nutch::client
+    }
+  }
+
+  class client {
+    package { "nutch":
+      ensure => latest,
+    }
+
+    file { "/etc/default/nutch":
+      content => template("nutch/nutch.default"),
+      require => Package["nutch"],
+    }
+  }
+}
