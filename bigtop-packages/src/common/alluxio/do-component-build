@@ -50,6 +50,11 @@ else
   if [ "${OS}" = "openEuler" ] || [ "${OS}" = "fedora" ]; then
     sed -i "s|<activeByDefault>false</activeByDefault>|<activeByDefault>true</activeByDefault>|g" integration/jnifuse/native/pom.xml
   fi
+  #openEuler use python3 default, node-gyp support python3 from 6.0.0.
+  if [ "${OS}" = "openEuler" ];then
+    sed -i 's#"node-gyp": "^3.8.0",#"node-gyp": "^6.0.0",#g'  `grep -rn '"node-gyp": "^3.8.0"' -rl`
+	  sed -i 's#https://registry.npmjs.org/node-gyp/-/node-gyp-3.8.0.tgz#https://registry.npmjs.org/node-gyp/-/node-gyp-6.0.0.tgz#g' `grep https://registry.npmjs.org/node-gyp/-/node-gyp-3.8.0.tgz -rl`
+  fi
 
   mvn clean install -DskipTests -Dhadoop.version=${HADOOP_VERSION} -Dmaven.buildNumber.revisionOnScmFailure=v${ALLUXIO_VERSION} -Phadoop-3 -Pyarn "$@"
 
