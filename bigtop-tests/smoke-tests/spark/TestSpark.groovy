@@ -112,4 +112,35 @@ class TestSpark {
     logError(sh)
     assertTrue("Failed to execute SparkR script", sh.getRet() == 0);
   }
+
+  // parse spark-defaults.conf to properties object
+  def parseSparkDefaultsConf(String path) {
+
+    def file = new File(path)
+    def props = new Properties()
+    props.load(file.newDataInputStream())
+    return props
+
+  }
+
+  @Test
+  void testSparkHistoryServer() {
+
+    String SPARK_CONF_DIR = SPARK_HOME + File.separator + "conf"
+    String SPARK_DEFAULTS_CONF = SPARK_CONF_DIR + File.separator + "spark-defaults.conf"
+
+    def props = parseSparkDefaultsConf(SPARK_DEFAULTS_CONF)
+    String spark_history_server_port = props.getProperty("spark.history.ui.port")
+
+    sh.exec("hostname -f")
+    logError(sh)
+    String spark_history_server_host = sh.getOut()[0]
+
+    sh.exec("curl -s -o /dev/null -w'%{http_code}' --negotiate -u: -k http://" + spark_history_server_host + 
+                  ":" + spark_history_server_port + " | grep 200")
+    logError(sh)
+    assertTrue("Failed to check spark history server", sh.getOut()[0] == "200")
+
+  }
+
 }
