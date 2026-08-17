@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# If BIGTOP_{COMPONENT}_JAVA_VERSION is set,
+# this script try to overide JAVA_HOME
+
+COMPONENT=$1
+ENV_VAL_NAME="BIGTOP_${COMPONENT^^}_JAVA_VERSION"
+
+
+if [ -f "/etc/profile.d/bigtop_${COMPONENT}_javaversion.sh" ]; then
+  . /etc/profile.d/bigtop_${COMPONENT}_javaversion.sh
+fi
+
+BIGTOP_COMPONENT_JAVA_VERSION=$(eval "echo \${$ENV_VAL_NAME}")
+logger "java version for ${COMPONENT} is ${BIGTOP_COMPONENT_JAVA_VERSION}"
+
+if [ -n "$BIGTOP_COMPONENT_JAVA_VERSION" ]; then
+  JAVA_HOME_CANDIDATES=(
+    "/usr/lib/jvm/java-1.${BIGTOP_COMPONENT_JAVA_VERSION}.0-openjdk"
+    "/usr/lib/jvm/java-${BIGTOP_COMPONENT_JAVA_VERSION}-openjdk"
+    "/usr/lib/jvm/adoptopenjdk-${BIGTOP_COMPONENT_JAVA_VERSION}-hotspot"
+  )  # considering only OpenJDK or AdoptOpenJDK
+  for candidate_regex in ${JAVA_HOME_CANDIDATES[@]} ; do
+    for candidate in `ls -rvd ${candidate_regex}* 2>/dev/null`; do
+      if [ -e ${candidate}/bin/java ]; then
+        export JAVA_HOME=${candidate}
+        break 2
+      fi
+    done
+  done
+fi
