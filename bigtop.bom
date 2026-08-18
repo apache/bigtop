@@ -356,5 +356,15 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
+    'trino' {
+                name    = 'trino'
+                relNotes = 'Trino is an open source distributed SQL query engine'
+                version { base = '415'; pkg = base; release = 1 }
+                tarball { destination = "trino.tar.gz"
+                          source = "trino.tar.gz" }
+                git     { repo = "https://github.com/trinodb/trino.git"
+                          ref = "release-v415"
+                          dir = "$name" }
+          }   
   }
 }
