@@ -34,6 +34,7 @@
     <artifactId>maven-fluido-skin</artifactId>
     <version>1.7</version>
   </skin>
+  <edit>${project.scm.url}</edit>
 
   <custom>
     <fluidoSkin>
