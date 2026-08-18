@@ -356,5 +356,14 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
+    'presto' {
+      name    = 'presto'
+      relNotes = 'Presto is an open source distributed SQL query engine'
+      version { base = '0.179'; pkg = base; release = 1 }
+      tarball { destination = "$name-${version.base}-src.tar.gz"
+                source = "${version.base}.tar.gz" }
+      url     { site = "https://github.com/prestodb/presto/archive"
+                archive = site }
+    }
   }
 }
