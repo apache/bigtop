@@ -62,7 +62,7 @@
     <slf4j.version>1.6.6</slf4j.version>
     <log4j.version>1.2.14</log4j.version>
     <antlr.version>3.4</antlr.version>
-    <cxf.version>2.5.0</cxf.version>
+    <cxf.version>2.6.11</cxf.version>
 
     <maven.build.timestamp.format>
       yyyy-MM-dd'T'HH:mm
