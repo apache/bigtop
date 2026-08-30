@@ -124,7 +124,7 @@ bigtop {
     zookeeper:['hadoop', 'hbase', 'kafka'],
     hadoop:['hbase', 'hive', 'tez',
       'solr', 'spark', 'ranger',
-      'phoenix', 'alluxio', 'zeppelin'
+      'phoenix', 'alluxio', 'zeppelin', 'nutch'
     ],
     hbase:['phoenix', 'hive'],
     hive:['zeppelin'],
@@ -209,6 +209,18 @@ bigtop {
       tarball { destination = "$name-${version.base}-src.tgz"
                 source      = destination }
       url     { download_path = "lucene/$name/${version.base}"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
+    'nutch' {
+      name    = 'nutch'
+      pkg     = name
+      rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      relNotes = 'Apache Nutch'
+      version { base = '1.22'; pkg = base; release = 1 }
+      tarball { source      = "apache-nutch-${version.base}-src.tar.gz"
+                destination = source }
+      url     { download_path = "/nutch/${version.base}"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
