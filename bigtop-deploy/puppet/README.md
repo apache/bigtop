@@ -23,7 +23,7 @@ For example: If you have `site.csv` in `/etc/puppet/config`,
 Then you should use `--confdir=/etc/puppet` , and puppet finds the config dir underneath.
 
 As an end to end example, you can follow the `provisioner/docker` recipes to see how to set up
-a puppet managed bigtop hadoop installation.  Those examples are gauranteed to work and 
+a puppet managed bigtop hadoop installation.  Those examples are guaranteed to work and 
 serve as a pedagogical round trip to the way bigtop integrates packaging, deployment, and 
 testing all into one package.
 
