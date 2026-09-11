@@ -32,7 +32,7 @@ Puppet module for configuring a host for building BigTop. It installs:
 
 ##Usage
 
-These can be indivdually applied using:
+These can be individually applied using:
 
 
 	node "node1.example.com" {
