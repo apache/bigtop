@@ -781,6 +781,7 @@ fi
 %config(noreplace) %{etc_default}/hadoop
 %dir %{np_etc_hadoop}
 /etc/bash_completion.d/hadoop
+%dir %{usr_lib_hadoop}
 %{usr_lib_hadoop}/*.jar
 %{usr_lib_hadoop}/lib
 %{usr_lib_hadoop}/sbin
