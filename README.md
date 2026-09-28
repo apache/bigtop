@@ -100,7 +100,7 @@ WARNING: since testing packages requires installing them on a live system it is 
 
         gradle install-hadoop
 
-  * Step 2: Run the the smoke tests on your cluster (see Step 3 and/or Step 4 below)
+  * Step 2: Run the smoke tests on your cluster (see Step 3 and/or Step 4 below)
 
   We are on the route of migrating subprojects under top-level gradle build. Currently
   converted projects could be listed by running
