@@ -340,7 +340,7 @@ if [ $# -eq 0 ]; then
 fi
 
 yamlconf="config.yaml"
-DOCKER_COMPOSE_CMD="docker-compose"
+DOCKER_COMPOSE_CMD="docker compose"
 
 for arg in $@
 do
