@@ -1,6 +1,7 @@
 build
 dl
 dist
+docker/bigtop-slaves/Dockerfile
 output
 target
 *~
