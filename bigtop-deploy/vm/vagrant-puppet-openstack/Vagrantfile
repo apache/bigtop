@@ -1,0 +1,152 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+require "yaml"
+
+_config = YAML.load(File.open(File.join(File.dirname(__FILE__), "vagrantconfig.yaml"), File::RDONLY).read)
+CONF = _config
+
+# Override vagrant configurations using environment variables
+keys = CONF.keys
+keys.each do |k|
+  if ENV[k.upcase] != nil then
+    puts "Overide from environment variable: " + k.upcase + " = " + ENV[k.upcase]
+    if /^\d+/.match(ENV[k.upcase])
+      CONF[k] = Integer(ENV[k.upcase])
+    else
+      CONF[k] = ENV[k.upcase]
+    end
+  end
+end
+
+# Repository
+# Example for testing a Release candidate.
+repo = CONF['repo']
+# repo = "http://bigtop.s3.amazonaws.com/releases/0.7.0/redhat/6/x86_64"
+
+# Which Linux Distribution to use. Right now only centos is tested
+distro = CONF['distro']
+
+# number of instances
+num_instances = CONF['num_instances']
+
+# hadoop ecosystem components
+components = CONF['components']
+
+# Whether to run smoke tests
+run_smoke_tests = CONF['run_smoke_tests']
+
+# Smoke test Components to run
+smoke_test_components = CONF['smoke_test_components'].join(',')
+
+# This is a update to allow dev packages
+# Force success - not worried if this step fails, since we generally only use it for development.
+enable_local_repo = CONF['enable_local_repo']
+puts "vagrant conf local repo enabled:  #{enable_local_repo}"
+
+# JDK package name
+jdk = CONF['jdk']
+
+# instance definition 
+flavor = CONF['flavor']
+image_id = CONF['image_id']
+keypair_name = CONF['keypair_name']
+FQDN = CONF['FQDN']
+key_path = CONF['key_path']
+run_in_parallel = CONF['run_in_parallel']
+require 'vagrant-openstack-provider'
+
+# master node hostname
+# be careful about the fqdn stuff, because its throught actual network
+# in this case it's csail.mit.edu
+hadoop_master = "hadoop-bigtop1.#{FQDN}"
+
+$script = <<SCRIPT
+service iptables stop
+chkconfig iptables off 
+# Prepare puppet configuration file
+mkdir -p /etc/puppet/hieradata
+cp /bigtop-home/bigtop-deploy/puppet/hiera.yaml /etc/puppet
+cp -r /bigtop-home/bigtop-deploy/puppet/hieradata/bigtop/ /etc/puppet/hieradata/
+cat > /etc/puppet/hieradata/site.yaml << EOF
+bigtop::hadoop_head_node: #{hadoop_master}
+hadoop::hadoop_storage_dirs: [/data/1, /data/2]
+bigtop::bigtop_repo_uri: #{repo}
+hadoop_cluster_node::cluster_components: #{components}
+bigtop::jdk_package_name: #{jdk}
+EOF
+SCRIPT
+
+Vagrant.configure(2) do |config|
+  # enable hostmanager to manage /etc/hosts 
+  config.hostmanager.enabled = true
+
+  # provision (multiple) node(s)
+  (1..num_instances).each do |i|
+    config.vm.define "hadoop-bigtop#{i}" do |bigtop|
+      bigtop.ssh.pty = true
+      bigtop.ssh.username = 'centos'
+      bigtop.ssh.private_key_path = key_path
+      bigtop.vm.provider :openstack do |os|
+        os.openstack_auth_url   = 'https://nimbus.csail.mit.edu:5001/v2.0/tokens'
+        os.username             = ENV['OS_USERNAME']
+        os.password             = ENV['OS_PASSWORD']
+        os.tenant_name          = ENV['OS_TENANT_NAME']
+        os.flavor               = flavor
+        os.server_name          = "hadoop-bigtop#{i}"
+        os.image                = image_id
+        os.endpoint_type        = 'publicURL'
+        os.keypair_name         = keypair_name
+        os.sync_method          = 'rsync'
+      end
+    
+      bigtop.vm.hostname = "hadoop-bigtop#{i}.#{FQDN}"
+      bigtop.hostmanager.aliases = "hadoop-bigtop#{i}"
+      
+      # sync folder from local to vm using rsync
+      bigtop.vm.synced_folder "../../../", "/bigtop-home"
+
+      # set up environment and hiera and manage hosts
+      bigtop.vm.provision :shell do |shell|
+        shell.path = "../utils/setup-env-" + distro + ".sh"
+      end
+      bigtop.vm.provision "shell", inline: $script
+    
+      # run puppet to deploy hadoop
+      bigtop.vm.provision :puppet do |puppet|
+        puppet.module_path = "../../puppet/modules/"
+        puppet.manifests_path = "../../puppet/manifests/"
+        puppet.manifest_file = "site.pp"
+        puppet.options = '--debug'
+      end
+     
+      if run_smoke_tests && !run_in_parallel then
+        if i==num_instances then
+          puts "creating provisioner directive for running tests"
+          bigtop.vm.provision :shell do |shell|
+            shell.path = "../utils/smoke-tests.sh" 
+            shell.args = ["#{smoke_test_components}"]
+          end
+        else
+          puts "Not creating provisioner directive for tests yet... only on vm #{i} of #{num_instances}"
+        end
+      end
+    end
+  end
+
+end
