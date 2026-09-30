@@ -36,5 +36,6 @@ override_dh_auto_install:
 	install -p -m 755 debian/bigtop-detect-javalibs debian/bigtop-utils/usr/lib/bigtop-utils/
 	install -p -m 755 debian/bigtop-detect-classpath debian/bigtop-utils/usr/lib/bigtop-utils/
 	install -p -m 755 debian/bigtop-monitor-service debian/bigtop-utils/usr/lib/bigtop-utils/
+	install -p -m 755 debian/bigtop-detect-component-specific-javahome debian/bigtop-utils/usr/lib/bigtop-utils/
 	install -d -p -m 755 debian/bigtop-utils/etc/default
 	install -p -m 644 debian/bigtop-utils.default debian/bigtop-utils/etc/default/bigtop-utils

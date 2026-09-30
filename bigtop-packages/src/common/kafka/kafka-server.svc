@@ -28,6 +28,8 @@ generate_start() {
 
 cat <<'__EOT__'
 start() {
+    # Overwrite JAVA_HOME if BIGTOP_KAFKA_JAVA_VERSION is set
+    . /usr/lib/bigtop-utils/bigtop-detect-component-specific-javahome kafka
     [ -x $EXE_FILE ] || exit $ERROR_PROGRAM_NOT_INSTALLED
     log_success_msg "Starting $DESC (${DAEMON}): "
 
