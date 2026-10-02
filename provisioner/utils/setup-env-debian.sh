@@ -27,6 +27,19 @@ service rng-tools start
 # The testing process would be broken due to "No such file or derictory: /etc/default/locale" in ubuntu16.04.
 apt-get install -y locales
 
+# Enable universe on Ubuntu so openjdk-11-jdk is available (e.g. for Nutch 1.22)
+# Use same Signed-By as main Ubuntu sources to avoid "Conflicting values set for option Signed-By"
+if command -v lsb_release >/dev/null 2>&1 && [ "$(lsb_release -is 2>/dev/null)" = "Ubuntu" ]; then
+  release=$(lsb_release -sc 2>/dev/null)
+  if [ -n "$release" ] && [ ! -f /etc/apt/sources.list.d/universe.list ]; then
+    echo "deb [signed-by=/usr/share/keyrings/ubuntu-archive-keyring.gpg] http://archive.ubuntu.com/ubuntu $release universe" > /etc/apt/sources.list.d/universe.list
+    apt-get update
+  fi
+fi
+
+# OpenJDK 11 for components that require it (e.g. Nutch 1.22, class file version 55.0)
+apt-get install -y openjdk-11-jdk
+
 if [ $enable_local_repo == "true" ]; then
     echo "deb file:///bigtop-home/output/apt bigtop contrib" > /etc/apt/sources.list.d/bigtop-home_output.list
     # In BIGTOP-2796 repo installed by puppet has priority 900, here we set higher priority for local repo

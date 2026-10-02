@@ -273,6 +273,7 @@ class bigtop_toolchain::packages {
         "dh-make",
         "libfuse2",
         "libjansi-java",
+        "ant",
         "libxml2-dev",
         "libxslt1-dev",
         "zlib1g-dev",
