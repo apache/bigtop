@@ -66,6 +66,7 @@ $roles_map = {
     worker => ["solr-server"],
   },
   spark => {
+    master => ["spark-history-server"],
     worker => ["spark-on-yarn"],
     client => ["spark-client"],
     library => ["spark-yarn-slave"],
