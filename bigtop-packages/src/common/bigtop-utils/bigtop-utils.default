@@ -16,6 +16,9 @@
 # Override JAVA_HOME detection for all bigtop packages
 # export JAVA_HOME
 
+# Override PYTHON3_PATH detection for all bigtop packages
+# export PYTHON3_PATH
+
 # Provide a colon-delimited list of directories to search for native Java libraries (e.g. libjvm.so)
 # export JAVA_NATIVE_PATH
 
